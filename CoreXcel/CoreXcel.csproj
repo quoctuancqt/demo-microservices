@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CFileManager\CFileManager.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\CoreFile\CoreFile.csproj" />
   </ItemGroup>
 
 </Project>

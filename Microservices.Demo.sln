@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{4E52D9EC-BB93-4406-9878-9CBACE3525A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{4E52D9EC-BB93-4406-9878-9CBACE3525A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{2BB4B196-2A7A-4484-848C-9DE73596EDA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{2BB4B196-2A7A-4484-848C-9DE73596EDA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CHttpResilience", "CHttpResilience\CHttpResilience.csproj", "{1D5FCDE3-7B7B-4392-B30F-B99802EB5606}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreHttpResilience", "CoreHttpResilience\CoreHttpResilience.csproj", "{1D5FCDE3-7B7B-4392-B30F-B99802EB5606}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{57BAB8C3-3A1D-4B9E-9CF6-04587CB8E2DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{57BAB8C3-3A1D-4B9E-9CF6-04587CB8E2DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{C961C10C-4B92-413A-8937-1B88CBC04511}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{43D75E75-EA6B-491B-A473-D7F87965E19B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CExcel", "CExcel\CExcel.csproj", "{161E1977-D920-42A8-B04A-528A4AD2618D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreXcel", "CoreXcel\CoreXcel.csproj", "{161E1977-D920-42A8-B04A-528A4AD2618D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFileManager", "CFileManager\CFileManager.csproj", "{85C37010-360F-45DE-AC8B-68CA159B3C14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreFile", "CoreFile\CoreFile.csproj", "{85C37010-360F-45DE-AC8B-68CA159B3C14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
