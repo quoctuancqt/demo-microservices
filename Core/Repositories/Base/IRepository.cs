@@ -5,8 +5,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.EntityFrameworkCore;
 
-    public interface IRepository<T> where T : EntityBase, IEntity
+    public interface IRepository<T, TContext>
+        where T : EntityBase, IEntity
+        where TContext : DbContext
     {
         IQueryable<T> FindAll();
 

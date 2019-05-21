@@ -7,12 +7,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public abstract class ReadOnlyRepository<T> : IReadOnlyRepository<T>
+    public abstract class ReadOnlyRepository<T, TContext> : IReadOnlyRepository<T, TContext>
          where T : EntityBase, IEntity
+        where TContext : DbContext
     {
-        private DbContext _context;
+        private TContext _context;
 
-        public ReadOnlyRepository(DbContext context)
+        public ReadOnlyRepository(TContext context)
         {
             _context = context;
         }

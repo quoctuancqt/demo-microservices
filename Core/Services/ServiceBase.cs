@@ -51,40 +51,5 @@
         {
             throw new BadRequestException(errors);
         }
-
-        protected virtual async Task<TEntity> CheckExistingNameAsync<TEntity>(string id, string name)
-              where TEntity : EntityBase, IEntity
-        {
-            var repository = _unitOfWork.GetPropValue<IRepository<TEntity>>($"{typeof(TEntity).Name}Repository");
-
-            var entity = await repository.FindAll()
-                .SingleOrDefaultAsync(x => x.GetPropValue<string>("Name").ToLower().Equals(name.ToLower().Trim()));
-
-            if (string.IsNullOrEmpty(id))
-            {
-                if (entity != null)
-                {
-                    BadRequest(new Dictionary<string, string>
-                    {
-                        { "name", "Already exists." }
-                    });
-                }
-            }
-            else
-            {
-                if (entity == null) return await repository.FindByAsync(id);
-
-                if (entity != null && id.Equals(entity.GetPropValue<string>("Id"))) return entity;
-                else
-                {
-                    BadRequest(new Dictionary<string, string>
-                    {
-                        { "name", "Already exists." }
-                    });
-                }
-            }
-
-            return null;
-        }
     }
 }

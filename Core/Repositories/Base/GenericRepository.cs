@@ -3,9 +3,11 @@
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public sealed class GenericRepository<T> : Repository<T>, IRepository<T> where T : EntityBase, IEntity
+    public sealed class GenericRepository<T, TContext> : Repository<T, TContext>, IRepository<T, TContext>
+        where T : EntityBase, IEntity
+        where TContext : DbContext
     {
-        public GenericRepository(DbContext context) : base(context)
+        public GenericRepository(TContext context) : base(context)
         {
         }
     }

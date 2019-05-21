@@ -9,11 +9,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public abstract class Repository<T> : IRepository<T> where T : EntityBase, IEntity
+    public abstract class Repository<T, TContext> : IRepository<T, TContext>
+        where T : EntityBase, IEntity
+        where TContext : DbContext
     {
-        protected readonly DbContext _context;
+        protected readonly TContext _context;
 
-        public Repository(DbContext context)
+        public Repository(TContext context)
         {
             _context = context;
         }

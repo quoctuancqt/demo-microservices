@@ -11,11 +11,12 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
 
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork<TContext> : IUnitOfWork, IDisposable
+        where TContext : DbContext
     {
         private IDictionary<Type, object> _repositories;
 
-        private DbContext _context;
+        private TContext _context;
 
         public HttpContext HttpContext { get; private set; }
 
@@ -39,12 +40,12 @@
 
         public string FirstName => CurrentUser.GetValue(ClaimTypes.GivenName);
 
-        public UnitOfWork(IHttpContextAccessor httpContextAccessor, DbContext context) : this(context)
+        public UnitOfWork(IHttpContextAccessor httpContextAccessor, TContext context) : this(context)
         {
             HttpContext = httpContextAccessor.HttpContext;
         }
 
-        public UnitOfWork(DbContext context)
+        public UnitOfWork(TContext context)
         {
             _context = context;
         }
@@ -66,8 +67,6 @@
             {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
-                    //await _context.SaveChangesAsync();
-
                     await action();
 
                     transaction.Commit();
@@ -127,17 +126,35 @@
 
         }
 
-        private GenericRepository<T> GetGenericRepository<T>() where T : EntityBase, IEntity
+        private GenericRepository<T, TContext> GetGenericRepository<T>()
+            where T : EntityBase, IEntity
         {
-            if (_repositories.ContainsKey(typeof(GenericRepository<T>)))
+            if (_repositories.ContainsKey(typeof(GenericRepository<T, TContext>)))
             {
-                return (GenericRepository<T>)_repositories[typeof(GenericRepository<T>)];
+                return (GenericRepository<T, TContext>)_repositories[typeof(GenericRepository<T, TContext>)];
             }
             else
             {
-                var repository = new GenericRepository<T>(_context);
+                var repository = new GenericRepository<T, TContext>(_context);
 
-                _repositories.Add(typeof(GenericRepository<T>), repository);
+                _repositories.Add(typeof(GenericRepository<T, TContext>), repository);
+
+                return repository;
+            }
+        }
+
+        private GenericReadOnlyRepository<T, TContext> GetGenericReadOnlyRepository<T>()
+            where T : EntityBase, IEntity
+        {
+            if (_repositories.ContainsKey(typeof(GenericReadOnlyRepository<T, TContext>)))
+            {
+                return (GenericReadOnlyRepository<T, TContext>)_repositories[typeof(GenericReadOnlyRepository<T, TContext>)];
+            }
+            else
+            {
+                var repository = new GenericReadOnlyRepository<T, TContext>(_context);
+
+                _repositories.Add(typeof(GenericReadOnlyRepository<T, TContext>), repository);
 
                 return repository;
             }
