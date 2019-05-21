@@ -5,7 +5,7 @@
 
     public static class ResilienceHttpExtension
     {
-        public static void RegisterResilienceHttp(this IServiceCollection services, bool useResilientHttp = false)
+        public static IServiceCollection RegisterResilienceHttp(this IServiceCollection services, bool useResilientHttp = false)
         {
             if (useResilientHttp)
             {
@@ -16,6 +16,8 @@
             {
                 services.AddTransient<IHttpClient, StandardHttpClient>();
             }
+
+            return services;
         }
     }
 }
