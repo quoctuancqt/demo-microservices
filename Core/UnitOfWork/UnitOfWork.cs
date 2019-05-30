@@ -67,6 +67,8 @@
             {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
+                    await _context.SaveChangesAsync();
+
                     await action();
 
                     transaction.Commit();
