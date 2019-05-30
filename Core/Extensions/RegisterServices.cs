@@ -1,17 +1,16 @@
-﻿namespace Core.Extensions
-{
-    using AutoMapper;
-    using Core.Interfaces;
-    using Core.Logging;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Resilience;
-    using Resilience.Factory;
-    using System;
-    using System.Reflection;
+﻿using AutoMapper;
+using Core.Interfaces;
+using Core.Logging;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Resilience.Extensions;
+using System;
+using System.Reflection;
 
+namespace Core.Extensions
+{
     public static class RegisterServices
     {
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -22,15 +21,7 @@
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            if (configuration.GetValue<string>("UseResilientHttp") == bool.TrueString)
-            {
-                services.AddTransient<IResilientHttpClientFactory, ResilientHttpClientFactory>();
-                services.AddTransient<IHttpClient, ResilientHttpClient>(sp => sp.GetService<IResilientHttpClientFactory>().CreateResilientHttpClient());
-            }
-            else
-            {
-                services.AddTransient<IHttpClient, StandardHttpClient>();
-            }
+            services.RegisterResilienceHttp(bool.Parse(configuration.GetValue<string>("UseResilientHttp")));
 
             return services;
         }
