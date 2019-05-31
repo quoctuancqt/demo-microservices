@@ -11,12 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\CoreHttpResilience\CoreHttpResilience.csproj" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
+    <ProjectReference Include="..\Demo.HttpResilience\Demo.HttpResilience.csproj" />
   </ItemGroup>
 
 </Project>
