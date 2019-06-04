@@ -55,7 +55,7 @@
 
                 return Encoding.UTF8.GetString(bytesDecrypted);
             }
-            catch (Exception ex)
+            catch 
             {
                 return null;
             }

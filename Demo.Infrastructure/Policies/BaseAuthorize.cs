@@ -21,7 +21,7 @@ namespace Core.Policies
             }
         }
 
-        private async Task<bool> BeforeAuthorizeAsync(AuthorizationHandlerContext context, TRequirement requirement)
+        private Task<bool> BeforeAuthorizeAsync(AuthorizationHandlerContext context, TRequirement requirement)
         {
             //var curentRole = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role);
 
@@ -43,7 +43,7 @@ namespace Core.Policies
             //    }
             //}
 
-            return true;
+            return Task.FromResult(true);
         }
 
         protected abstract bool IsAuthorize(AuthorizationHandlerContext context, TRequirement requirement);
