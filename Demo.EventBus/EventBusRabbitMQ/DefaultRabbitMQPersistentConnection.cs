@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 
-namespace Demo.EventBus.EventBusRabbitMQ
+namespace Demo.EventBus
 {
     public class DefaultRabbitMQPersistentConnection
        : IRabbitMQPersistentConnection

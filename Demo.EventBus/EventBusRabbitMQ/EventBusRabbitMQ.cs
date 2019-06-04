@@ -1,6 +1,7 @@
 ﻿using Demo.EventBus.Abstractions;
 using Demo.EventBus.Events;
 using Demo.EventBus.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -15,32 +16,34 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.EventBus.EventBusRabbitMQ
+namespace Demo.EventBus
 {
     public class EventBusRabbitMQ : IEventBus, IDisposable
     {
-        const string BROKER_NAME = "eshop_event_bus";
+        private string _brokerName = string.Empty;
 
         private readonly IRabbitMQPersistentConnection _persistentConnection;
         private readonly ILogger<EventBusRabbitMQ> _logger;
         private readonly IEventBusSubscriptionsManager _subsManager;
-        private readonly IServiceCollection _serviceCollection;
+        private readonly IServiceProvider _serviceProvider;
         private readonly int _retryCount;
 
         private IModel _consumerChannel;
         private string _queueName;
 
         public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, ILogger<EventBusRabbitMQ> logger,
-            IServiceCollection serviceCollection, IEventBusSubscriptionsManager subsManager, string queueName = null, int retryCount = 5)
+            IServiceProvider serviceProvider, IEventBusSubscriptionsManager subsManager, IConfiguration configuration,
+            string queueName = null, int retryCount = 5)
         {
             _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
             _queueName = queueName;
             _consumerChannel = CreateConsumerChannel();
-            _serviceCollection = serviceCollection;
+            _serviceProvider = serviceProvider;
             _retryCount = retryCount;
             _subsManager.OnEventRemoved += SubsManager_OnEventRemoved;
+            _brokerName = configuration.GetValue<string>("BrokerName");
         }
 
         private void SubsManager_OnEventRemoved(object sender, string eventName)
@@ -53,7 +56,7 @@ namespace Demo.EventBus.EventBusRabbitMQ
             using (var channel = _persistentConnection.CreateModel())
             {
                 channel.QueueUnbind(queue: _queueName,
-                    exchange: BROKER_NAME,
+                    exchange: _brokerName,
                     routingKey: eventName);
 
                 if (_subsManager.IsEmpty)
@@ -87,7 +90,7 @@ namespace Demo.EventBus.EventBusRabbitMQ
 
                 _logger.LogTrace("Declaring RabbitMQ exchange to publish event: {EventId}", @event.Id);
 
-                channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
+                channel.ExchangeDeclare(exchange: _brokerName, type: "direct");
 
                 var message = JsonConvert.SerializeObject(@event);
                 var body = Encoding.UTF8.GetBytes(message);
@@ -100,7 +103,7 @@ namespace Demo.EventBus.EventBusRabbitMQ
                     _logger.LogTrace("Publishing event to RabbitMQ: {EventId}", @event.Id);
 
                     channel.BasicPublish(
-                        exchange: BROKER_NAME,
+                        exchange: _brokerName,
                         routingKey: eventName,
                         mandatory: true,
                         basicProperties: properties,
@@ -145,7 +148,7 @@ namespace Demo.EventBus.EventBusRabbitMQ
                 using (var channel = _persistentConnection.CreateModel())
                 {
                     channel.QueueBind(queue: _queueName,
-                                      exchange: BROKER_NAME,
+                                      exchange: _brokerName,
                                       routingKey: eventName);
                 }
             }
@@ -235,7 +238,7 @@ namespace Demo.EventBus.EventBusRabbitMQ
 
             var channel = _persistentConnection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: BROKER_NAME,
+            channel.ExchangeDeclare(exchange: _brokerName,
                                     type: "direct");
 
             channel.QueueDeclare(queue: _queueName,
@@ -262,7 +265,7 @@ namespace Demo.EventBus.EventBusRabbitMQ
 
             if (_subsManager.HasSubscriptionsForEvent(eventName))
             {
-                using (var scope = _serviceCollection.BuildServiceProvider().CreateScope())
+                using (var scope = _serviceProvider.CreateScope())
                 {
                     var subscriptions = _subsManager.GetHandlersForEvent(eventName);
                     foreach (var subscription in subscriptions)
