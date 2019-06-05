@@ -8,12 +8,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Demo.Infrastructure.UnitOfWork;
 
-    public abstract class Repository<T, TContext> : IRepository<T, TContext>
+    public class Repository<T, TContext> : IRepository<T, TContext>
         where T : EntityBase, IEntity
-        where TContext : DbContext
+        where TContext : DbContext, IUnitOfWork
     {
-        protected readonly TContext _context;
+        private readonly TContext _context;
+
+        public IUnitOfWork UnitOfWork => _context;
 
         public Repository(TContext context)
         {

@@ -1,34 +1,36 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
 using Core.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Core.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Resilience.Extensions;
-using System;
 using System.Reflection;
 
 namespace Core.Extensions
 {
     public static class RegisterServices
     {
-        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddServices(this IServiceCollection services, bool useResilientHttp = false)
         {
-            services.AddScoped(UnitOfWorkFactory);
-
             services.AddSingleton(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+
+            services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>));
+
+            services.Scan(scan =>
+            {
+                scan.FromCallingAssembly()
+                        .AddClasses()
+                        .AsMatchingInterface();
+            });
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.RegisterResilienceHttp(bool.Parse(configuration.GetValue<string>("UseResilientHttp")));
+            services.RegisterResilienceHttp(useResilientHttp);
 
             return services;
-        }
-
-        private static UnitOfWork.IUnitOfWork UnitOfWorkFactory(IServiceProvider serviceProvider)
-        {
-            return new UnitOfWork.UnitOfWork<DbContext>(serviceProvider.GetService<IHttpContextAccessor>(), serviceProvider.GetService<DbContext>());
         }
     }
 }

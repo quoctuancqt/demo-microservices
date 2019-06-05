@@ -7,7 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public abstract class ReadOnlyRepository<T, TContext> : IReadOnlyRepository<T, TContext>
+    public class ReadOnlyRepository<T, TContext> : IReadOnlyRepository<T, TContext>
          where T : EntityBase, IEntity
         where TContext : DbContext
     {

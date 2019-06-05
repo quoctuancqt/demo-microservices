@@ -6,11 +6,14 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using Demo.Infrastructure.UnitOfWork;
 
     public interface IRepository<T, TContext>
         where T : EntityBase, IEntity
         where TContext : DbContext
     {
+        IUnitOfWork UnitOfWork { get; }
+
         IQueryable<T> FindAll();
 
         IQueryable<T> FindAll(ISpecification<T> spec);
