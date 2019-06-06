@@ -14,13 +14,10 @@ namespace Demo.ProductService.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IRepository<Product, ProductContext> _repository;
-        private readonly IRepository<Category, ProductContext> _categoryRepository;
 
-        public ProductController(IRepository<Product, ProductContext> repository,
-            IRepository<Category, ProductContext> categoryRepository)
+        public ProductController(IRepository<Product, ProductContext> repository)
         {
             _repository = repository;
-            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
