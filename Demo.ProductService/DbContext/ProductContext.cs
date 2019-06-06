@@ -20,19 +20,19 @@ namespace Demo.ProductService
             modelBuilder.Entity<Category>().HasData(
               new Category
               {
-                  Id = Guid.NewGuid(),
+                  Id=Guid.NewGuid().ToString(),
                   Name = "Electronics",
                   Description = "Electronic Items",
               },
               new Category
               {
-                  Id = Guid.NewGuid(),
+                  Id = Guid.NewGuid().ToString(),
                   Name = "Clothes",
                   Description = "Dresses",
               },
               new Category
               {
-                  Id = Guid.NewGuid(),
+                  Id = Guid.NewGuid().ToString(),
                   Name = "Grocery",
                   Description = "Grocery Items",
               }

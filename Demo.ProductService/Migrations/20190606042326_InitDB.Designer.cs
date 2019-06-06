@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.ProductService.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20190605095358_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190606042326_InitDB")]
+    partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace Demo.ProductService.Migrations
 
             modelBuilder.Entity("Demo.ProductService.Models.Category", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("CreatedBy");
@@ -45,19 +45,19 @@ namespace Demo.ProductService.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f1fce814-9fce-410c-958d-ec9b3b9e7dd5"),
+                            Id = "a159f213-3cdd-40a3-9fb3-240b89369155",
                             Description = "Electronic Items",
                             Name = "Electronics"
                         },
                         new
                         {
-                            Id = new Guid("58bbd7ac-a2ea-4ef2-abcf-0b16f2627e62"),
+                            Id = "39e325fb-4b03-4dba-bdf7-8452117b903f",
                             Description = "Dresses",
                             Name = "Clothes"
                         },
                         new
                         {
-                            Id = new Guid("fafc95f5-0fe7-4020-b977-7c4f9221d29f"),
+                            Id = "0de8b508-16a5-4683-be41-179da9f592d3",
                             Description = "Grocery Items",
                             Name = "Grocery"
                         });
@@ -65,12 +65,10 @@ namespace Demo.ProductService.Migrations
 
             modelBuilder.Entity("Demo.ProductService.Models.Product", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("CategoryId");
-
-                    b.Property<Guid?>("CategoryId1");
 
                     b.Property<string>("CreatedBy");
 
@@ -89,7 +87,7 @@ namespace Demo.ProductService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId1");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -98,7 +96,7 @@ namespace Demo.ProductService.Migrations
                 {
                     b.HasOne("Demo.ProductService.Models.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId1");
+                        .HasForeignKey("CategoryId");
                 });
 #pragma warning restore 612, 618
         }

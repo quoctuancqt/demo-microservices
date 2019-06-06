@@ -7,7 +7,7 @@ namespace Core.Entities
         T Id { get; set; }
     }
 
-    public interface IEntity : IEntity<Guid>
+    public interface IEntity : IEntity<string>
     {
 
     }

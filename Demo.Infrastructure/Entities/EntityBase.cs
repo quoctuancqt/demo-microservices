@@ -6,7 +6,7 @@
     public class EntityBase : IEntity, IAudit
     {
         [Key]
-        public Guid Id { get; set; }
+        public virtual string Id { get; set; }
 
         public string CreatedBy { get; set; }
 

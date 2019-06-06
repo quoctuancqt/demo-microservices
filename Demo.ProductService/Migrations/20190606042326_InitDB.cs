@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Demo.ProductService.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,7 @@ namespace Demo.ProductService.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     ModifiedBy = table.Column<string>(nullable: true),
@@ -28,7 +28,7 @@ namespace Demo.ProductService.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     CreatedDate = table.Column<DateTime>(nullable: true),
                     ModifiedBy = table.Column<string>(nullable: true),
@@ -36,15 +36,14 @@ namespace Demo.ProductService.Migrations
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Price = table.Column<decimal>(type: "money", nullable: false),
-                    CategoryId = table.Column<string>(nullable: true),
-                    CategoryId1 = table.Column<Guid>(nullable: true)
+                    CategoryId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId1",
-                        column: x => x.CategoryId1,
+                        name: "FK_Products_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -53,22 +52,22 @@ namespace Demo.ProductService.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "Description", "ModifiedBy", "ModifiedDate", "Name" },
-                values: new object[] { new Guid("f1fce814-9fce-410c-958d-ec9b3b9e7dd5"), null, null, "Electronic Items", null, null, "Electronics" });
+                values: new object[] { "a159f213-3cdd-40a3-9fb3-240b89369155", null, null, "Electronic Items", null, null, "Electronics" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "Description", "ModifiedBy", "ModifiedDate", "Name" },
-                values: new object[] { new Guid("58bbd7ac-a2ea-4ef2-abcf-0b16f2627e62"), null, null, "Dresses", null, null, "Clothes" });
+                values: new object[] { "39e325fb-4b03-4dba-bdf7-8452117b903f", null, null, "Dresses", null, null, "Clothes" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "Description", "ModifiedBy", "ModifiedDate", "Name" },
-                values: new object[] { new Guid("fafc95f5-0fe7-4020-b977-7c4f9221d29f"), null, null, "Grocery Items", null, null, "Grocery" });
+                values: new object[] { "0de8b508-16a5-4683-be41-179da9f592d3", null, null, "Grocery Items", null, null, "Grocery" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId1",
+                name: "IX_Products_CategoryId",
                 table: "Products",
-                column: "CategoryId1");
+                column: "CategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

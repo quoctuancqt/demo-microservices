@@ -21,14 +21,14 @@ namespace Demo.Infrastructure.UnitOfWork
 
         public override int SaveChanges()
         {
-            //BeforeCommit();
+            BeforeCommit();
 
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            //BeforeCommit();
+            BeforeCommit();
 
             return base.SaveChangesAsync(cancellationToken);
         }

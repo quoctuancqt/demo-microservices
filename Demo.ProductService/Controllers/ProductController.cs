@@ -3,12 +3,14 @@ using Demo.ProductService.DTO;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IRepository<Product, ProductContext> _repository;
@@ -24,6 +26,8 @@ namespace Demo.ProductService.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            var user = HttpContext.User.Identity;
+
             var products = _repository.FindAll();
 
             return new OkObjectResult(products);
@@ -39,11 +43,13 @@ namespace Demo.ProductService.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateProductDto dto)
         {
-            _repository.Add(dto.CreateEntity());
+            var entity = dto.CreateEntity();
+
+            _repository.Add(entity);
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            return Ok("Success");
+            return new OkObjectResult(entity);
         }
     }
 }

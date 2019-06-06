@@ -44,9 +44,11 @@ namespace Core.Middlewares
 
             context.Response.StatusCode = (int)code;
 
-            _logger.LogError(exception.Message);
+            var errorMessage = exception.InnerException?.Message ?? exception.Message;
 
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(new { errorCode = code, error = exception.Message }));
+            _logger.LogError(errorMessage);
+
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new { errorCode = code, error = errorMessage }));
         }
     }
 }

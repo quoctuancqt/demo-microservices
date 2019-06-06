@@ -1,4 +1,5 @@
 ﻿using Demo.ProductService.Models;
+using System;
 
 namespace Demo.ProductService.DTO
 {
