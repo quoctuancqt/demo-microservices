@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.EventBus", "Demo.Event
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.ProductService", "Demo.ProductService\Demo.ProductService.csproj", "{66372726-0EBE-47A9-8D0B-301B9EFB459F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.NotificationService", "Demo.NotificationService\Demo.NotificationService.csproj", "{2818083A-5398-4820-872A-D38B7A3ACB65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{66372726-0EBE-47A9-8D0B-301B9EFB459F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66372726-0EBE-47A9-8D0B-301B9EFB459F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66372726-0EBE-47A9-8D0B-301B9EFB459F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2818083A-5398-4820-872A-D38B7A3ACB65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2818083A-5398-4820-872A-D38B7A3ACB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2818083A-5398-4820-872A-D38B7A3ACB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2818083A-5398-4820-872A-D38B7A3ACB65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{BECAD117-5B44-4B73-933B-E84D9995EF0C} = {C961C10C-4B92-413A-8937-1B88CBC04511}
 		{73161CA8-D008-4EEC-88EC-A65E6B5A04BE} = {C961C10C-4B92-413A-8937-1B88CBC04511}
 		{66372726-0EBE-47A9-8D0B-301B9EFB459F} = {D9CCC2A2-60A4-43BD-B40C-E30CED2DA42C}
+		{2818083A-5398-4820-872A-D38B7A3ACB65} = {D9CCC2A2-60A4-43BD-B40C-E30CED2DA42C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FCC9EBB3-1F22-4FFF-BF21-BF464CDF6C40}

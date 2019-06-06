@@ -1,17 +1,19 @@
-﻿using Core.Extensions;
-using Core.Middlewares;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Core.Extensions;
 using Demo.Infrastructure.Extensions;
-using Demo.Infrastructure.Proxies;
 using JwtTokenServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace Demo.ProductService
+namespace Demo.NotificationService
 {
     public class Startup
     {
@@ -25,11 +27,6 @@ namespace Demo.ProductService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ProductContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("ProductDB"));
-            });
-
             services.AddServices();
 
             services.AddHttpContextAccessor();
@@ -38,7 +35,7 @@ namespace Demo.ProductService
 
             services.JWTAddAuthentication();
 
-            services.AddHttpClient<GatewayApiClient>(config =>
+            services.AddHttpClient("GatewayClient", config =>
             {
                 config.BaseAddress = new Uri(Configuration.GetValue<string>("GatewayApi"));
             });
@@ -53,8 +50,6 @@ namespace Demo.ProductService
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseSwashbuckle();
 
