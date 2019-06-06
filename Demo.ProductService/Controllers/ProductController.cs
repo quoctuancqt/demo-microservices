@@ -3,7 +3,6 @@ using Demo.ProductService.DTO;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
@@ -23,8 +22,6 @@ namespace Demo.ProductService.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var user = HttpContext.User.Identity;
-
             var products = _repository.FindAll();
 
             return new OkObjectResult(products);
