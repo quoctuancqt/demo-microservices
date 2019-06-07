@@ -1,7 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using System.Linq;
 
 namespace Demo.Infrastructure.MongoDb
 {
