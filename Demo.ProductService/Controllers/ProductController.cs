@@ -6,7 +6,6 @@ using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
