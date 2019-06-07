@@ -39,11 +39,11 @@ namespace Demo.EventBus
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
             _queueName = queueName;
+            _brokerName = configuration.GetValue<string>("BrokerName");
             _consumerChannel = CreateConsumerChannel();
             _serviceProvider = serviceProvider;
             _retryCount = retryCount;
             _subsManager.OnEventRemoved += SubsManager_OnEventRemoved;
-            _brokerName = configuration.GetValue<string>("BrokerName");
         }
 
         private void SubsManager_OnEventRemoved(object sender, string eventName)
@@ -90,7 +90,7 @@ namespace Demo.EventBus
 
                 _logger.LogTrace("Declaring RabbitMQ exchange to publish event: {EventId}", @event.Id);
 
-                channel.ExchangeDeclare(exchange: _brokerName, type: "direct");
+                channel.ExchangeDeclare(exchange: _brokerName, type: "direct", true);
 
                 var message = JsonConvert.SerializeObject(@event);
                 var body = Encoding.UTF8.GetBytes(message);
@@ -101,7 +101,6 @@ namespace Demo.EventBus
                     properties.DeliveryMode = 2; // persistent
 
                     _logger.LogTrace("Publishing event to RabbitMQ: {EventId}", @event.Id);
-
                     channel.BasicPublish(
                         exchange: _brokerName,
                         routingKey: eventName,
@@ -239,7 +238,7 @@ namespace Demo.EventBus
             var channel = _persistentConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: _brokerName,
-                                    type: "direct");
+                                    type: "direct", true);
 
             channel.QueueDeclare(queue: _queueName,
                                  durable: true,

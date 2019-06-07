@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
+using System;
 
 namespace Demo.EventBus.Extensions
 {
@@ -42,21 +43,27 @@ namespace Demo.EventBus.Extensions
                     var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
 
-                    var factory = new ConnectionFactory()
+                    //var factory = new ConnectionFactory()
+                    //{
+                    //    HostName = configuration["EventBusConnection"],
+                    //    VirtualHost = "/",
+                    //    DispatchConsumersAsync = true
+                    //};
+
+                    //if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                    //{
+                    //    factory.UserName = configuration["EventBusUserName"];
+                    //}
+
+                    //if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                    //{
+                    //    factory.Password = configuration["EventBusPassword"];
+                    //}
+
+                    var factory = new ConnectionFactory
                     {
-                        HostName = configuration["EventBusConnection"],
-                        DispatchConsumersAsync = true
+                        Uri = new Uri(configuration["EventBusConnection"]),
                     };
-
-                    if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
-                    {
-                        factory.UserName = configuration["EventBusUserName"];
-                    }
-
-                    if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
-                    {
-                        factory.Password = configuration["EventBusPassword"];
-                    }
 
                     var retryCount = 5;
                     if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))

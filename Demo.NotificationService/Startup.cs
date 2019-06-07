@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Core.Extensions;
+using Demo.EventBus.Abstractions;
+using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.MongoDb;
+using Demo.NotificationService.IntegrationEvents.EventHandling;
+using Demo.NotificationService.IntegrationEvents.Events;
 using JwtTokenServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Demo.NotificationService
 {
@@ -43,7 +42,17 @@ namespace Demo.NotificationService
                 config.BaseAddress = new Uri(Configuration.GetValue<string>("GatewayApi"));
             });
 
+            services.AddEventBus(Configuration);
+
+            services.AddSingleton<NotificationIntegrationEventHandler>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        }
+
+        public void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +68,8 @@ namespace Demo.NotificationService
             app.UseAuthentication();
 
             app.UseMvc();
+
+            ConfigureEventBus(app);
         }
     }
 }

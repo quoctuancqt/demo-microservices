@@ -1,5 +1,6 @@
 ﻿using Core.Extensions;
 using Core.Middlewares;
+using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.Proxies;
 using JwtTokenServer.Extensions;
@@ -45,6 +46,8 @@ namespace Demo.ProductService
                 config.DefaultRequestHeaders.Clear();
                 config.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
+
+            services.AddEventBus(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

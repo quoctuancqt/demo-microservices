@@ -1,6 +1,8 @@
 ﻿using Core.Repositories;
+using Demo.EventBus.Abstractions;
 using Demo.Infrastructure.Proxies;
 using Demo.ProductService.DTO;
+using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,13 @@ namespace Demo.ProductService.Controllers
     {
         private readonly IRepository<Product, ProductContext> _repository;
         private readonly GatewayApiClient _gatewayApiClient;
+        private readonly IEventBus _eventBus;
 
-        public ProductController(IRepository<Product, ProductContext> repository, GatewayApiClient gatewayApiClient)
+        public ProductController(IRepository<Product, ProductContext> repository,
+            GatewayApiClient gatewayApiClient, IEventBus eventBus)
         {
             _repository = repository;
+            _eventBus = eventBus;
             _gatewayApiClient = gatewayApiClient;
             _gatewayApiClient.SetToken();
         }
@@ -53,6 +58,14 @@ namespace Demo.ProductService.Controllers
             response.EnsureSuccessStatusCode();
 
             return new OkObjectResult(entity);
+        }
+
+        [HttpPost("push-notify")]
+        public IActionResult PushNotify([FromBody] CreateProductDto dto)
+        {
+            _eventBus.Publish(new NotificationIntegrationEvent(dto.Name, dto.Description, dto.Price, dto.CategoryId));
+
+            return Ok("Publish");
         }
     }
 }
