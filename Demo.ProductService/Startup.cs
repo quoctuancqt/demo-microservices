@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http.Headers;
 
 namespace Demo.ProductService
 {
@@ -41,6 +42,8 @@ namespace Demo.ProductService
             services.AddHttpClient<GatewayApiClient>(config =>
             {
                 config.BaseAddress = new Uri(Configuration.GetValue<string>("GatewayApi"));
+                config.DefaultRequestHeaders.Clear();
+                config.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

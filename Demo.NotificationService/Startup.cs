@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Extensions;
 using Demo.Infrastructure.Extensions;
+using Demo.Infrastructure.MongoDb;
 using JwtTokenServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,8 @@ namespace Demo.NotificationService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped(sp => new MongoFactory(Configuration));
+
             services.AddServices();
 
             services.AddHttpContextAccessor();

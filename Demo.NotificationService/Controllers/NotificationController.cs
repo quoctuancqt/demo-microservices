@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Demo.Infrastructure.MongoDb;
+using Demo.NotificationService.Dto;
+using Demo.NotificationService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Demo.NotificationService.Controllers
@@ -11,10 +12,18 @@ namespace Demo.NotificationService.Controllers
     [Authorize]
     public class NotificationController : ControllerBase
     {
-        [HttpPost("notify")]
-        public IActionResult Notify([FromBody] IDictionary<string, string> dic)
+        private readonly MongoFactory _mongoFactory;
+
+        public NotificationController(MongoFactory mongoFactory)
         {
-            Console.WriteLine($"Id: {dic["Id"]}, Name: {dic["Name"]}");
+            _mongoFactory = mongoFactory;
+        }
+
+        [HttpPost("notify")]
+        public async Task<IActionResult> Notify([FromBody] NotificationDto dto)
+        {
+            await _mongoFactory.GetCollection<Notification>()
+                .InsertOneAsync(new Notification(dto.Name, dto.Description, dto.Price, dto.CategoryId));
 
             return Ok();
         }

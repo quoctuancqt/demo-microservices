@@ -4,6 +4,7 @@ using Demo.ProductService.DTO;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
@@ -47,7 +48,9 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
+            var response = await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
+
+            response.EnsureSuccessStatusCode();
 
             return new OkObjectResult(entity);
         }
