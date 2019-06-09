@@ -42,7 +42,7 @@ namespace Demo.NotificationService
                 config.BaseAddress = new Uri(Configuration.GetValue<string>("GatewayApi"));
             });
 
-            services.AddEventBus(Configuration);
+            //services.AddEventBus(Configuration);
 
             services.AddSingleton<NotificationIntegrationEventHandler>();
 
@@ -69,7 +69,7 @@ namespace Demo.NotificationService
 
             app.UseMvc();
 
-            ConfigureEventBus(app);
+            //ConfigureEventBus(app);
         }
     }
 }

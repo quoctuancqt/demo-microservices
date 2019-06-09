@@ -47,7 +47,7 @@ namespace Demo.ProductService
                 config.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
-            services.AddEventBus(Configuration);
+            //services.AddEventBus(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
