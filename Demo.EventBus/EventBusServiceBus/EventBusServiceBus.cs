@@ -16,7 +16,8 @@ namespace Demo.EventBus
         private readonly IServiceBusPersisterConnection _serviceBusPersisterConnection;
         private readonly ILogger<EventBusServiceBus> _logger;
         private readonly IEventBusSubscriptionsManager _subsManager;
-        private readonly SubscriptionClient _subscriptionClient;
+        //private readonly SubscriptionClient _subscriptionClient;
+        private readonly IQueueClient _queueClient;
         private readonly IServiceProvider _serviceProvider;
         private const string INTEGRATION_EVENT_SUFIX = "IntegrationEvent";
 
@@ -28,8 +29,9 @@ namespace Demo.EventBus
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
 
-            _subscriptionClient = new SubscriptionClient(serviceBusPersisterConnection.ServiceBusConnectionStringBuilder,
-                subscriptionClientName);
+            //_subscriptionClient = new SubscriptionClient(serviceBusPersisterConnection.ServiceBusConnectionStringBuilder,
+            //    subscriptionClientName);
+            _queueClient = new QueueClient(serviceBusPersisterConnection.ServiceBusConnectionStringBuilder, ReceiveMode.PeekLock);
             _serviceProvider = serviceProvider;
 
             RemoveDefaultRule();
@@ -70,26 +72,28 @@ namespace Demo.EventBus
         {
             var eventName = typeof(T).Name.Replace(INTEGRATION_EVENT_SUFIX, "");
 
-            var containsKey = _subsManager.HasSubscriptionsForEvent<T>();
-            if (!containsKey)
-            {
-                try
-                {
-                    _subscriptionClient.AddRuleAsync(new RuleDescription
-                    {
-                        Filter = new CorrelationFilter { Label = eventName },
-                        Name = eventName
-                    }).GetAwaiter().GetResult();
-                }
-                catch (ServiceBusException)
-                {
-                    _logger.LogWarning("The messaging entity {eventName} already exists.", eventName);
-                }
-            }
+            //var containsKey = _subsManager.HasSubscriptionsForEvent<T>();
+            //if (!containsKey)
+            //{
+            //    try
+            //    {
+            //        _subscriptionClient.AddRuleAsync(new RuleDescription
+            //        {
+            //            Filter = new CorrelationFilter { Label = eventName },
+            //            Name = eventName
+            //        }).GetAwaiter().GetResult();
+            //    }
+            //    catch (ServiceBusException)
+            //    {
+            //        _logger.LogWarning("The messaging entity {eventName} already exists.", eventName);
+            //    }
+            //}
 
             _logger.LogInformation("Subscribing to event {EventName} with {EventHandler}", eventName, nameof(TH));
 
             _subsManager.AddSubscription<T, TH>();
+
+            ReceiveMessages();
         }
 
         public void Unsubscribe<T, TH>()
@@ -98,17 +102,17 @@ namespace Demo.EventBus
         {
             var eventName = typeof(T).Name.Replace(INTEGRATION_EVENT_SUFIX, "");
 
-            try
-            {
-                _subscriptionClient
-                 .RemoveRuleAsync(eventName)
-                 .GetAwaiter()
-                 .GetResult();
-            }
-            catch (MessagingEntityNotFoundException)
-            {
-                _logger.LogWarning("The messaging entity {eventName} Could not be found.", eventName);
-            }
+            //try
+            //{
+            //    _subscriptionClient
+            //     .RemoveRuleAsync(eventName)
+            //     .GetAwaiter()
+            //     .GetResult();
+            //}
+            //catch (MessagingEntityNotFoundException)
+            //{
+            //    _logger.LogWarning("The messaging entity {eventName} Could not be found.", eventName);
+            //}
 
             _logger.LogInformation("Unsubscribing from event {EventName}", eventName);
 
@@ -130,19 +134,50 @@ namespace Demo.EventBus
 
         private void RegisterSubscriptionClientMessageHandler()
         {
-            _subscriptionClient.RegisterMessageHandler(
-                async (message, token) =>
-                {
-                    var eventName = $"{message.Label}{INTEGRATION_EVENT_SUFIX}";
-                    var messageData = Encoding.UTF8.GetString(message.Body);
+            //_subscriptionClient.RegisterMessageHandler(
+            //    async (message, token) =>
+            //    {
+            //        var eventName = $"{message.Label}{INTEGRATION_EVENT_SUFIX}";
+            //        var messageData = Encoding.UTF8.GetString(message.Body);
 
-                    // Complete the message so that it is not received again.
-                    if (await ProcessEvent(eventName, messageData))
+            //        // Complete the message so that it is not received again.
+            //        if (await ProcessEvent(eventName, messageData))
+            //        {
+            //            await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
+            //        }
+            //    },
+            //    new MessageHandlerOptions(ExceptionReceivedHandler) { MaxConcurrentCalls = 10, AutoComplete = false });
+        }
+
+        // Receives messages from the queue in a loop 
+        private void ReceiveMessages()
+        {
+            try
+            {
+                // Register a OnMessage callback 
+                _queueClient.RegisterMessageHandler(
+                    async (message, token) =>
                     {
-                        await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
-                    }
-                },
-                new MessageHandlerOptions(ExceptionReceivedHandler) { MaxConcurrentCalls = 10, AutoComplete = false });
+                        var eventName = $"{message.Label}{INTEGRATION_EVENT_SUFIX}";
+                        var messageData = Encoding.UTF8.GetString(message.Body);
+                        // Process the message 
+                        //Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
+                        await ProcessEvent(eventName, messageData);
+                        // Complete the message so that it is not received again. 
+                        // This can be done only if the queueClient is opened in ReceiveMode.PeekLock mode. 
+                        await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
+                    },
+                    new MessageHandlerOptions(exceptionReceivedEventArgs =>
+                    {
+                        _logger.LogInformation($"Message handler encountered an exception {exceptionReceivedEventArgs.Exception}.");
+                        return Task.CompletedTask;
+                    })
+                    { MaxConcurrentCalls = 1, AutoComplete = false });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogDebug($"{DateTime.Now} > Exception: {exception.Message}");
+            }
         }
 
         private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
@@ -190,17 +225,17 @@ namespace Demo.EventBus
 
         private void RemoveDefaultRule()
         {
-            try
-            {
-                _subscriptionClient
-                 .RemoveRuleAsync(RuleDescription.DefaultRuleName)
-                 .GetAwaiter()
-                 .GetResult();
-            }
-            catch (MessagingEntityNotFoundException)
-            {
-                _logger.LogWarning("The messaging entity {DefaultRuleName} Could not be found.", RuleDescription.DefaultRuleName);
-            }
+            //try
+            //{
+            //    _subscriptionClient
+            //     .RemoveRuleAsync(RuleDescription.DefaultRuleName)
+            //     .GetAwaiter()
+            //     .GetResult();
+            //}
+            //catch (MessagingEntityNotFoundException)
+            //{
+            //    _logger.LogWarning("The messaging entity {DefaultRuleName} Could not be found.", RuleDescription.DefaultRuleName);
+            //}
         }
     }
 }

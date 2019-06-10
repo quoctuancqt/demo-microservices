@@ -7,6 +7,7 @@
     {
         ServiceBusConnectionStringBuilder ServiceBusConnectionStringBuilder { get; }
 
-        ITopicClient CreateModel();
+        //ITopicClient CreateModel();
+        IQueueClient CreateModel();
     }
 }

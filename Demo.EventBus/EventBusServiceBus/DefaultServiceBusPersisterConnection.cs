@@ -8,7 +8,8 @@ namespace Demo.EventBus
     {
         private readonly ILogger<DefaultServiceBusPersisterConnection> _logger;
         private readonly ServiceBusConnectionStringBuilder _serviceBusConnectionStringBuilder;
-        private ITopicClient _topicClient;
+        //private ITopicClient _topicClient;
+        private IQueueClient _queueClient;
 
         bool _disposed;
 
@@ -19,19 +20,30 @@ namespace Demo.EventBus
 
             _serviceBusConnectionStringBuilder = serviceBusConnectionStringBuilder ??
                 throw new ArgumentNullException(nameof(serviceBusConnectionStringBuilder));
-            _topicClient = new TopicClient(_serviceBusConnectionStringBuilder, RetryPolicy.Default);
+            //_topicClient = new TopicClient(_serviceBusConnectionStringBuilder, RetryPolicy.Default);
+            _queueClient = new QueueClient(_serviceBusConnectionStringBuilder, ReceiveMode.PeekLock);
         }
 
         public ServiceBusConnectionStringBuilder ServiceBusConnectionStringBuilder => _serviceBusConnectionStringBuilder;
 
-        public ITopicClient CreateModel()
+        //public ITopicClient CreateModel()
+        //{
+        //    if (_topicClient.IsClosedOrClosing)
+        //    {
+        //        _topicClient = new TopicClient(_serviceBusConnectionStringBuilder, RetryPolicy.Default);
+        //    }
+
+        //    return _topicClient;
+        //}
+
+        public IQueueClient CreateModel()
         {
-            if (_topicClient.IsClosedOrClosing)
+            if (_queueClient.IsClosedOrClosing)
             {
-                _topicClient = new TopicClient(_serviceBusConnectionStringBuilder, RetryPolicy.Default);
+                _queueClient = new QueueClient(_serviceBusConnectionStringBuilder, ReceiveMode.PeekLock);
             }
 
-            return _topicClient;
+            return _queueClient;
         }
 
         public void Dispose()
