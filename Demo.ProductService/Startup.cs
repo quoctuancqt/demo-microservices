@@ -53,8 +53,6 @@ namespace Demo.ProductService
 
             services.AddEventBus(Configuration);
 
-            //services.AddHostedService<ConsumeRabbitMQHostedService>();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -73,14 +71,6 @@ namespace Demo.ProductService
             app.UseAuthentication();
 
             app.UseMvc();
-
-            //ConfigureEventBus(app);
-        }
-
-        public void ConfigureEventBus(IApplicationBuilder app)
-        {
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
     }
 }

@@ -1,22 +1,19 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Demo.EventBus.Abstractions;
+using Demo.EventBus.HostServices;
 using Demo.NotificationService.IntegrationEvents.EventHandling;
 using Demo.NotificationService.IntegrationEvents.Events;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Demo.NotificationService.Background
 {
-    public class ConsumeRabbitMQHostedService : BackgroundService
+    public class ConsumeRabbitMQHostedService : BaseConsumeHostService
     {
-        private readonly IEventBus _eventBus;
-        private readonly ILogger<ConsumeRabbitMQHostedService> _logger;
-        public ConsumeRabbitMQHostedService(IEventBus eventBus, ILogger<ConsumeRabbitMQHostedService> logger)
+        public ConsumeRabbitMQHostedService(IEventBus eventBus, ILogger<BaseConsumeHostService> logger) : base(eventBus, logger)
         {
-            _eventBus = eventBus;
-            _logger = logger;
         }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();

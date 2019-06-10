@@ -72,12 +72,6 @@ namespace Demo.NotificationService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        public void ConfigureEventBus(IApplicationBuilder app)
-        {
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -91,8 +85,6 @@ namespace Demo.NotificationService
             app.UseAuthentication();
 
             app.UseMvc();
-
-            //ConfigureEventBus(app);
         }
     }
 }

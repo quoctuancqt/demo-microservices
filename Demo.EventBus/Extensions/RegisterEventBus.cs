@@ -43,27 +43,21 @@ namespace Demo.EventBus.Extensions
                     var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
 
-                    //var factory = new ConnectionFactory()
-                    //{
-                    //    HostName = configuration["EventBusConnection"],
-                    //    VirtualHost = "/",
-                    //    DispatchConsumersAsync = true
-                    //};
-
-                    //if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
-                    //{
-                    //    factory.UserName = configuration["EventBusUserName"];
-                    //}
-
-                    //if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
-                    //{
-                    //    factory.Password = configuration["EventBusPassword"];
-                    //}
-
-                    var factory = new ConnectionFactory
+                    var factory = new ConnectionFactory()
                     {
-                        Uri = new Uri(configuration["EventBusConnection"]),
+                        HostName = configuration["EventBusHostName"],
+                        Port = int.Parse(configuration["EventBusPort"]),
                     };
+
+                    if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                    {
+                        factory.UserName = configuration["EventBusUserName"];
+                    }
+
+                    if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                    {
+                        factory.Password = configuration["EventBusPassword"];
+                    }
 
                     var retryCount = 5;
                     if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
