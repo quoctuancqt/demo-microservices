@@ -237,7 +237,7 @@ namespace Demo.EventBus
             var channel = _persistentConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: _brokerName,
-                                    type: "direct", true);
+                                    type: "Fanout", true);
 
             channel.QueueDeclare(queue: _queueName,
                                  durable: true,
