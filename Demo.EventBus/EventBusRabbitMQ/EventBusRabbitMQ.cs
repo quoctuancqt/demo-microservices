@@ -11,6 +11,7 @@ using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
+using RabbitMQ.Client.MessagePatterns;
 using System;
 using System.Net.Sockets;
 using System.Text;
@@ -89,7 +90,7 @@ namespace Demo.EventBus
             {
                 _logger.LogTrace("Declaring RabbitMQ exchange to publish event: {EventId}", @event.Id);
 
-                channel.ExchangeDeclare(exchange: _brokerName, type: "direct", true);
+                channel.ExchangeDeclare(exchange: _brokerName, ExchangeType.Direct);
 
                 var message = JsonConvert.SerializeObject(@event);
                 var body = Encoding.UTF8.GetBytes(message);
@@ -179,13 +180,13 @@ namespace Demo.EventBus
             _subsManager.Clear();
         }
 
-        private void StartBasicConsume()
+        public void StartBasicConsume()
         {
             _logger.LogTrace("Starting RabbitMQ basic consume");
 
             if (_consumerChannel != null)
             {
-                var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
+                var consumer = new EventingBasicConsumer(_consumerChannel);
 
                 consumer.Received += Consumer_Received;
 
@@ -193,6 +194,22 @@ namespace Demo.EventBus
                     queue: _queueName,
                     autoAck: false,
                     consumer: consumer);
+
+                //var subscription = new Subscription(_consumerChannel,
+                //            _queueName, false);
+
+                //while (true)
+                //{
+                //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
+
+                //    var message = Encoding.Default.GetString(deliveryArguments.Body);
+
+                //    var routingKey = deliveryArguments.RoutingKey;
+
+                //    Console.WriteLine("--- Payment - Routing Key <{0}> : {1}", routingKey, message);
+
+                //    subscription.Ack(deliveryArguments);
+                //}
             }
             else
             {
@@ -200,7 +217,7 @@ namespace Demo.EventBus
             }
         }
 
-        private async Task Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
+        private void Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
         {
             var eventName = eventArgs.RoutingKey;
             var message = Encoding.UTF8.GetString(eventArgs.Body);
@@ -212,7 +229,7 @@ namespace Demo.EventBus
                     throw new InvalidOperationException($"Fake exception requested: \"{message}\"");
                 }
 
-                await ProcessEvent(eventName, message);
+                ProcessEvent(eventName, message);
             }
             catch (Exception ex)
             {
@@ -237,7 +254,7 @@ namespace Demo.EventBus
             var channel = _persistentConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: _brokerName,
-                                    type: "Fanout", true);
+                                    ExchangeType.Direct);
 
             channel.QueueDeclare(queue: _queueName,
                                  durable: true,
@@ -257,7 +274,7 @@ namespace Demo.EventBus
             return channel;
         }
 
-        private async Task ProcessEvent(string eventName, string message)
+        private void ProcessEvent(string eventName, string message)
         {
             _logger.LogTrace("Processing RabbitMQ event: {EventName}", eventName);
 
@@ -273,7 +290,7 @@ namespace Demo.EventBus
                             var handler = (IDynamicIntegrationEventHandler)scope.ServiceProvider.GetService(subscription.HandlerType);
                             if (handler == null) continue;
                             dynamic eventData = JObject.Parse(message);
-                            await handler.Handle(eventData);
+                            handler.Handle(eventData).GetAwait().GetResult();
                         }
                         else
                         {
@@ -282,7 +299,7 @@ namespace Demo.EventBus
                             var eventType = _subsManager.GetEventTypeByName(eventName);
                             var integrationEvent = JsonConvert.DeserializeObject(message, eventType);
                             var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                            await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
+                            concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
                         }
                     }
                 }

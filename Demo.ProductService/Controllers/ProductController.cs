@@ -17,15 +17,15 @@ namespace Demo.ProductService.Controllers
     {
         private readonly IRepository<Product, ProductContext> _repository;
         private readonly GatewayApiClient _gatewayApiClient;
-        //private readonly IEventBus _eventBus;
+        private readonly IEventBus _eventBus;
 
         public ProductController(IRepository<Product, ProductContext> repository,
             GatewayApiClient gatewayApiClient
-            //, IEventBus eventBus
+            , IEventBus eventBus
             )
         {
             _repository = repository;
-            //_eventBus = eventBus;
+            _eventBus = eventBus;
             _gatewayApiClient = gatewayApiClient;
             //_gatewayApiClient.SetToken();
         }
@@ -64,7 +64,7 @@ namespace Demo.ProductService.Controllers
         [HttpPost("push-notify")]
         public IActionResult PushNotify([FromBody] CreateProductDto dto)
         {
-            //_eventBus.Publish(new NotificationIntegrationEvent(dto.Name, dto.Description, dto.Price, dto.CategoryId));
+            _eventBus.Publish(new NotificationIntegrationEvent(dto.Name, dto.Description, dto.Price, dto.CategoryId));
 
             return Ok("Publish");
         }

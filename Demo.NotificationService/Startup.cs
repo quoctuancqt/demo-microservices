@@ -4,6 +4,7 @@ using Demo.EventBus.Abstractions;
 using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.MongoDb;
+using Demo.NotificationService.Background;
 using Demo.NotificationService.IntegrationEvents.EventHandling;
 using Demo.NotificationService.IntegrationEvents.Events;
 using JwtTokenServer.Extensions;
@@ -31,6 +32,26 @@ namespace Demo.NotificationService
 
             services.AddServices();
 
+            //var hcBuilder = services.AddHealthChecks();
+
+            //if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            //{
+            //    hcBuilder
+            //        .AddAzureServiceBusTopic(
+            //            Configuration["EventBusConnection"],
+            //            topicName: "eshop_event_bus",
+            //            name: "basket-servicebus-check",
+            //            tags: new string[] { "servicebus" });
+            //}
+            //else
+            //{
+            //    hcBuilder
+            //        .AddRabbitMQ(
+            //            Configuration["EventBusConnection"],
+            //            name: "basket-rabbitmqbus-check",
+            //            tags: new string[] { "rabbitmqbus" });
+            //}
+
             services.AddHttpContextAccessor();
 
             services.AddSwashbuckle();
@@ -42,9 +63,11 @@ namespace Demo.NotificationService
                 config.BaseAddress = new Uri(Configuration.GetValue<string>("GatewayApi"));
             });
 
-            //services.AddEventBus(Configuration);
+            services.AddEventBus(Configuration);
 
-            services.AddSingleton<NotificationIntegrationEventHandler>();
+            services.AddHostedService<ConsumeRabbitMQHostedService>();
+
+            services.AddTransient<NotificationIntegrationEventHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

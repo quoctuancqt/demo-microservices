@@ -1,8 +1,12 @@
 ﻿using Core.Extensions;
 using Core.Middlewares;
+using Demo.EventBus.Abstractions;
 using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.Proxies;
+using Demo.ProductService.Background;
+using Demo.ProductService.IntegrationEvents.EventHandling;
+using Demo.ProductService.IntegrationEvents.Events;
 using JwtTokenServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -47,7 +51,9 @@ namespace Demo.ProductService
                 config.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
-            //services.AddEventBus(Configuration);
+            services.AddEventBus(Configuration);
+
+            //services.AddHostedService<ConsumeRabbitMQHostedService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -67,6 +73,14 @@ namespace Demo.ProductService
             app.UseAuthentication();
 
             app.UseMvc();
+
+            //ConfigureEventBus(app);
+        }
+
+        public void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
     }
 }
