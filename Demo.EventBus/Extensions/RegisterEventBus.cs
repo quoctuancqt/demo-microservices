@@ -20,7 +20,7 @@ namespace Demo.EventBus.Extensions
                 {
                     var logger = sp.GetRequiredService<ILogger<DefaultServiceBusPersisterConnection>>();
 
-                    var serviceBusConnectionString = configuration.GetValue<bool>("IsConsumer") ? configuration["EventBusConnectionRead"] : configuration["EventBusConnectionWrite"];
+                    var serviceBusConnectionString = configuration["EventBusConnection"];
                     var serviceBusConnection = new ServiceBusConnectionStringBuilder(serviceBusConnectionString);
 
                     return new DefaultServiceBusPersisterConnection(serviceBusConnection, logger);
