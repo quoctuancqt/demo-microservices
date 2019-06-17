@@ -4,7 +4,6 @@ using Demo.EventBus.Abstractions;
 using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.MongoDb;
-using Demo.NotificationService.Background;
 using Demo.NotificationService.IntegrationEvents.EventHandling;
 using Demo.NotificationService.IntegrationEvents.Events;
 using JwtTokenServer.Extensions;
@@ -45,8 +44,6 @@ namespace Demo.NotificationService
 
             services.AddEventBus(Configuration);
 
-            services.AddHostedService<ConsumeRabbitMQHostedService>();
-
             services.AddTransient<NotificationIntegrationEventHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -64,7 +61,16 @@ namespace Demo.NotificationService
 
             app.UseAuthentication();
 
+            ConfigureEventBus(app);
+
             app.UseMvc();
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetService<IEventBus>();
+
+            eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
     }
 }
