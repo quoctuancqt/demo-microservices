@@ -50,13 +50,9 @@ namespace Demo.EventBus.Extensions
 
                     var factory = new ConnectionFactory();
 
-                    if (configuration["EventBus:CloudAMQP"] == bool.TrueString)
+                    if (!string.IsNullOrEmpty(configuration["EventBus:Connection"]))
                     {
-                        var userName = configuration["EventBus:UserName"];
-                        var password = configuration["EventBus:Password"];
-                        var hostName = configuration["EventBus:HostName"];
-                        factory.VirtualHost = userName;
-                        factory.Uri = new Uri(string.Format("amqp://{0}:{1}@{2}/{3}", userName, password, hostName, userName));
+                        factory.Uri = new Uri(configuration["EventBus:Connection"]);
                     }
                     else
                     {

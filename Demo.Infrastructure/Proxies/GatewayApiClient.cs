@@ -54,9 +54,12 @@ namespace Demo.Infrastructure.Proxies
             {
                 var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
 
-                var beareToken = token.Split("Bearer ")[1];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var beareToken = token.Split("Bearer ")[1];
 
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
+                }
             }
         }
     }
