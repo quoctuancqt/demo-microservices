@@ -114,7 +114,11 @@ namespace Demo.EventBus.Extensions
 
             foreach (var integrationEvent in integrationEvents)
             {
-                var handler = types.Where(h => h.Name.Equals($"{integrationEvent.Name}Handler") && (typeof(IIntegrationEventHandler).IsAssignableFrom(h)));
+                var handler = types.SingleOrDefault(h => h.Name.Equals($"{integrationEvent.Name}Handler") && (typeof(IIntegrationEventHandler).IsAssignableFrom(h)));
+
+                var sub = typeof(IEventBus).GetMethod("Subscribe");
+                var generic = sub.MakeGenericMethod(integrationEvent, handler);
+                generic.Invoke(eventBus, null);
             }
 
             Console.WriteLine("Test");
