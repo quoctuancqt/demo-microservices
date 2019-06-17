@@ -42,13 +42,6 @@ namespace API.Gateway
                     });
 
             services.AddOcelot(Configuration);
-            //.AddCacheManager(x => {
-            //    x.WithMicrosoftLogging(log =>
-            //    {
-            //        log.AddConsole(LogLevel.Debug);
-            //    })
-            //    .WithDictionaryHandle();
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
