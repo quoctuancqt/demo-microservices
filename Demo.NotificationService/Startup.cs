@@ -61,7 +61,9 @@ namespace Demo.NotificationService
 
             app.UseAuthentication();
 
-            ConfigureEventBus(app);
+            app.RegisterEventBusHandler();
+
+            //ConfigureEventBus(app);
 
             app.UseMvc();
         }

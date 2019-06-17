@@ -1,10 +1,15 @@
 ﻿using Demo.EventBus.Abstractions;
+using Demo.EventBus.Events;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Demo.EventBus.Extensions
 {
@@ -97,6 +102,22 @@ namespace Demo.EventBus.Extensions
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
 
             return services;
+        }
+
+        public static void RegisterEventBusHandler(this IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetService<IEventBus>();
+
+            var types = Assembly.GetCallingAssembly().GetExportedTypes();
+
+            var integrationEvents = types.Where(t => t.IsSubclassOf(typeof(IntegrationEvent)) && !t.IsAbstract);
+
+            foreach (var integrationEvent in integrationEvents)
+            {
+                var handler = types.Where(h => h.Name.Equals($"{integrationEvent.Name}Handler") && (typeof(IIntegrationEventHandler).IsAssignableFrom(h)));
+            }
+
+            Console.WriteLine("Test");
         }
     }
 }
