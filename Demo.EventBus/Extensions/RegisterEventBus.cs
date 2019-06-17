@@ -12,15 +12,15 @@ namespace Demo.EventBus.Extensions
     {
         public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
         {
-            var subscriptionClientName = configuration["SubscriptionClientName"];
+            var subscriptionClientName = configuration["EventBus:QueueName"];
 
-            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            if (configuration["EventBus:AzureServiceBus"] == bool.TrueString)
             {
                 services.AddSingleton<IServiceBusPersisterConnection>(sp =>
                 {
                     var logger = sp.GetRequiredService<ILogger<DefaultServiceBusPersisterConnection>>();
 
-                    var serviceBusConnectionString = configuration["EventBusConnection"];
+                    var serviceBusConnectionString = configuration["EventBus:Connection"];
                     var serviceBusConnection = new ServiceBusConnectionStringBuilder(serviceBusConnectionString);
 
                     return new DefaultServiceBusPersisterConnection(serviceBusConnection, logger);
@@ -43,26 +43,36 @@ namespace Demo.EventBus.Extensions
                     var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
 
-                    var factory = new ConnectionFactory()
-                    {
-                        HostName = configuration["EventBusHostName"],
-                        Port = int.Parse(configuration["EventBusPort"]),
-                    };
+                    var factory = new ConnectionFactory();
 
-                    if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                    if (configuration["EventBus:CloudAMQP"] == bool.TrueString)
                     {
-                        factory.UserName = configuration["EventBusUserName"];
+                        var userName = configuration["EventBus:UserName"];
+                        var password = configuration["EventBus:Password"];
+                        var hostName = configuration["EventBus:HostName"];
+                        factory.VirtualHost = userName;
+                        factory.Uri = new Uri(string.Format("amqp://{0}:{1}@{2}/{3}", userName, password, hostName, userName));
                     }
-
-                    if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                    else
                     {
-                        factory.Password = configuration["EventBusPassword"];
+                        factory.HostName = configuration["EventBus:HostName"];
+                        factory.Port = int.Parse(configuration["EventBus:Port"]);
+
+                        if (!string.IsNullOrEmpty(configuration["EventBus:Username"]))
+                        {
+                            factory.UserName = configuration["EventBus:Username"];
+                        }
+
+                        if (!string.IsNullOrEmpty(configuration["EventBus:Password"]))
+                        {
+                            factory.Password = configuration["EventBus:Password"];
+                        }
                     }
 
                     var retryCount = 5;
-                    if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                    if (!string.IsNullOrEmpty(configuration["EventBus:RetryCount"]))
                     {
-                        retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                        retryCount = int.Parse(configuration["EventBus:RetryCount"]);
                     }
 
                     return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
@@ -75,9 +85,9 @@ namespace Demo.EventBus.Extensions
                     var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
 
                     var retryCount = 5;
-                    if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                    if (!string.IsNullOrEmpty(configuration["EventBus:RetryCount"]))
                     {
-                        retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                        retryCount = int.Parse(configuration["EventBus:RetryCount"]);
                     }
 
                     return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, sp, eventBusSubcriptionsManager, configuration, subscriptionClientName, retryCount);

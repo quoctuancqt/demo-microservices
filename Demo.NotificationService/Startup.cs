@@ -32,26 +32,6 @@ namespace Demo.NotificationService
 
             services.AddServices();
 
-            //var hcBuilder = services.AddHealthChecks();
-
-            //if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
-            //{
-            //    hcBuilder
-            //        .AddAzureServiceBusTopic(
-            //            Configuration["EventBusConnection"],
-            //            topicName: "eshop_event_bus",
-            //            name: "basket-servicebus-check",
-            //            tags: new string[] { "servicebus" });
-            //}
-            //else
-            //{
-            //    hcBuilder
-            //        .AddRabbitMQ(
-            //            Configuration["EventBusConnection"],
-            //            name: "basket-rabbitmqbus-check",
-            //            tags: new string[] { "rabbitmqbus" });
-            //}
-
             services.AddHttpContextAccessor();
 
             services.AddSwashbuckle();

@@ -40,7 +40,7 @@ namespace Demo.EventBus
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
             _queueName = queueName;
-            _brokerName = configuration.GetValue<string>("BrokerName");
+            _brokerName = configuration["EventBus:ExchangeName"];
             _consumerChannel = CreateConsumerChannel();
             _serviceProvider = serviceProvider;
             _retryCount = retryCount;
