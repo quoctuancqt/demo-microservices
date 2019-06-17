@@ -27,7 +27,7 @@ namespace Demo.ProductService.Controllers
             _repository = repository;
             _eventBus = eventBus;
             _gatewayApiClient = gatewayApiClient;
-            //_gatewayApiClient.SetToken();
+            _gatewayApiClient.SetToken();
         }
 
         [HttpGet]
