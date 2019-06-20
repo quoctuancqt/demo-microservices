@@ -1,11 +1,8 @@
 ﻿using Core.Extensions;
 using Core.Middlewares;
-using Demo.EventBus.Abstractions;
 using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.Proxies;
-using Demo.ProductService.IntegrationEvents.EventHandling;
-using Demo.ProductService.IntegrationEvents.Events;
 using JwtTokenServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
