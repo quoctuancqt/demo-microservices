@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Common.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,7 @@ namespace API.Gateway
 
             builder.UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseEnvironment(EnvironmentHelper.Environment)
                 .UseUrls("http://*:9000")
                 .UseStartup<Startup>();
 
