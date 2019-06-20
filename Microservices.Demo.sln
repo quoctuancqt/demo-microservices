@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.NotificationService", 
 EndProject
 Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "Microservices.DemoApplication", "Microservices.DemoApplication\Microservices.DemoApplication.sfproj", "{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.WorkerService", "Demo.WorkerService\Demo.WorkerService.csproj", "{20C77621-D49A-4B41-A6D1-73A5E0359A31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.WorkerService", "Demo.WorkerService\Demo.WorkerService.csproj", "{20C77621-D49A-4B41-A6D1-73A5E0359A31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
