@@ -40,7 +40,7 @@ namespace Demo.EventBus
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
             _queueName = queueName;
-            _brokerName = configuration.GetValue<string>("BrokerName");
+            _brokerName = configuration["EventBus:ExchangeName"];
             _consumerChannel = CreateConsumerChannel();
             _serviceProvider = serviceProvider;
             _retryCount = retryCount;
@@ -194,22 +194,6 @@ namespace Demo.EventBus
                     queue: _queueName,
                     autoAck: false,
                     consumer: consumer);
-
-                //var subscription = new Subscription(_consumerChannel,
-                //            _queueName, false);
-
-                //while (true)
-                //{
-                //    BasicDeliverEventArgs deliveryArguments = subscription.Next();
-
-                //    var message = Encoding.Default.GetString(deliveryArguments.Body);
-
-                //    var routingKey = deliveryArguments.RoutingKey;
-
-                //    Console.WriteLine("--- Payment - Routing Key <{0}> : {1}", routingKey, message);
-
-                //    subscription.Ack(deliveryArguments);
-                //}
             }
             else
             {

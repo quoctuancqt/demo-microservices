@@ -30,7 +30,7 @@
                     Directory.CreateDirectory(folder);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 folder = null;
             }

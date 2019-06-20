@@ -2,13 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using JwtTokenServer.Extensions;
+    using JwtTokenServer.Models;
     using JwtTokenServer.Proxies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
     using OAuthServer.Services;
     using Swashbuckle.AspNetCore.Swagger;
 

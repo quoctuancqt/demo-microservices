@@ -12,7 +12,7 @@ namespace Demo.ProductService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IRepository<Product, ProductContext> _repository;
@@ -27,7 +27,7 @@ namespace Demo.ProductService.Controllers
             _repository = repository;
             _eventBus = eventBus;
             _gatewayApiClient = gatewayApiClient;
-            //_gatewayApiClient.SetToken();
+            _gatewayApiClient.SetToken();
         }
 
         [HttpGet]
