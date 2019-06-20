@@ -33,11 +33,13 @@ namespace API.Gateway
                     {
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("SymmetricSecurityKey"))
+                            ValidIssuer = Configuration.GetValue<string>("JWTSettings:Issuer"),
+                            ValidAudience = Configuration.GetValue<string>("JWTSettings:Audience"),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("JWTSettings:SecurityKey")))
                         };
                     });
 

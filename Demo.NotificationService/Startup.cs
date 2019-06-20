@@ -35,7 +35,7 @@ namespace Demo.NotificationService
 
             services.AddSwashbuckle();
 
-            services.JWTAddAuthentication();
+            services.JWTAddAuthentication(Configuration);
 
             services.AddHttpClient("GatewayClient", config =>
             {

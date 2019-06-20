@@ -116,8 +116,6 @@ namespace Demo.EventBus.Extensions
                 var generic = sub.MakeGenericMethod(integrationEvent, handler);
                 generic.Invoke(eventBus, null);
             }
-
-            Console.WriteLine("Test");
         }
     }
 }
