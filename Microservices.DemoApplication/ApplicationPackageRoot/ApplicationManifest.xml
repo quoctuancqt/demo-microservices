@@ -11,7 +11,8 @@
     <ServiceManifestRef ServiceManifestName="Demo.OAuthServerPkg" ServiceManifestVersion="1.0.0" />
     <Policies>
       <ContainerHostPolicies CodePackageRef="Code" Isolation="[Demo.OAuthServer_Isolation]">
-        <PortBinding ContainerPort="5000" EndpointRef="Demo.OAuthServerTypeEndpoint" /> <!--Port of container-->
+        <PortBinding ContainerPort="5000" EndpointRef="Demo.OAuthServerTypeEndpoint" />
+        <!--Port of container-->
       </ContainerHostPolicies>
     </Policies>
   </ServiceManifestImport>

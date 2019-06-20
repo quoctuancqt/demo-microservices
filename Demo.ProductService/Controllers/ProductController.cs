@@ -12,7 +12,7 @@ namespace Demo.ProductService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IRepository<Product, ProductContext> _repository;

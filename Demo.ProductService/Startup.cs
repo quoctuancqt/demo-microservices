@@ -41,7 +41,7 @@ namespace Demo.ProductService
 
             services.AddSwashbuckle();
 
-            services.JWTAddAuthentication();
+            services.JWTAddAuthentication(Configuration);
 
             services.AddHttpClient<GatewayApiClient>(config =>
             {
