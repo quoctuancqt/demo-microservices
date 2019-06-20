@@ -1,5 +1,4 @@
 ﻿using Demo.EventBus.Events;
-using System;
 
 namespace Demo.EventBus.Abstractions
 {
