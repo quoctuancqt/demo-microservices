@@ -1,6 +1,6 @@
 ﻿using Demo.EventBus.Events;
 
-namespace Demo.NotificationService.IntegrationEvents.Events
+namespace Demo.WorkerService.IntegrationEvents.Events
 {
     public class NotificationIntegrationEvent : IntegrationEvent
     {

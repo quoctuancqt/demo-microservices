@@ -13,6 +13,7 @@ using RabbitMQ.Client.Exceptions;
 using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Demo.EventBus
 {
@@ -183,7 +184,7 @@ namespace Demo.EventBus
 
             if (_consumerChannel != null)
             {
-                var consumer = new EventingBasicConsumer(_consumerChannel);
+                var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
 
                 consumer.Received += Consumer_Received;
 
@@ -198,7 +199,7 @@ namespace Demo.EventBus
             }
         }
 
-        private void Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
+        private async Task Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
         {
             var eventName = eventArgs.RoutingKey;
             var message = Encoding.UTF8.GetString(eventArgs.Body);
@@ -210,7 +211,7 @@ namespace Demo.EventBus
                     throw new InvalidOperationException($"Fake exception requested: \"{message}\"");
                 }
 
-                ProcessEvent(eventName, message);
+                await ProcessEvent(eventName, message);
             }
             catch (Exception ex)
             {
@@ -255,7 +256,7 @@ namespace Demo.EventBus
             return channel;
         }
 
-        private void ProcessEvent(string eventName, string message)
+        private async Task ProcessEvent(string eventName, string message)
         {
             _logger.LogTrace("Processing RabbitMQ event: {EventName}", eventName);
 
@@ -271,7 +272,7 @@ namespace Demo.EventBus
                             var handler = (IDynamicIntegrationEventHandler)scope.ServiceProvider.GetService(subscription.HandlerType);
                             if (handler == null) continue;
                             dynamic eventData = JObject.Parse(message);
-                            handler.Handle(eventData).GetAwait().GetResult();
+                            await handler.Handle(eventData);
                         }
                         else
                         {

@@ -1,10 +1,10 @@
 ﻿using Demo.EventBus.Abstractions;
 using Demo.Infrastructure.MongoDb;
-using Demo.NotificationService.IntegrationEvents.Events;
-using Demo.NotificationService.Models;
+using Demo.WorkerService.IntegrationEvents.Events;
+using Demo.WorkerService.Models;
 using System.Threading.Tasks;
 
-namespace Demo.NotificationService.IntegrationEvents.EventHandling
+namespace Demo.WorkerService.IntegrationEvents.EventHandling
 {
     public class NotificationIntegrationEventHandler : IIntegrationEventHandler<NotificationIntegrationEvent>
     {
