@@ -6,6 +6,7 @@ using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
@@ -33,7 +34,7 @@ namespace Demo.ProductService.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var products = _repository.FindAll();
+            var products = _repository.FindAll().ToList();
 
             return new OkObjectResult(products);
         }
