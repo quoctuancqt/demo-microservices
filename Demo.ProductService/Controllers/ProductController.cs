@@ -6,6 +6,7 @@ using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
@@ -33,7 +34,7 @@ namespace Demo.ProductService.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var products = _repository.FindAll();
+            var products = _repository.FindAll().ToList();
 
             return new OkObjectResult(products);
         }
@@ -54,9 +55,9 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            var response = await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
+            //var response = await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
 
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
 
             return new OkObjectResult(entity);
         }

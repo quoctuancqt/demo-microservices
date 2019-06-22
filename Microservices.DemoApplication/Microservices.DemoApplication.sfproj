@@ -32,9 +32,16 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Demo.NotificationService\Demo.NotificationService.csproj">
+      <ServiceLaunchUrl>http://{ContainerIpAddress}:{ContainerPort}/api/values</ServiceLaunchUrl>
+    </ProjectReference>
     <ProjectReference Include="..\Demo.OAuthServer\Demo.OAuthServer.csproj">
       <ServiceLaunchUrl>http://{ContainerIpAddress}:{ContainerPort}/api/values</ServiceLaunchUrl>
     </ProjectReference>
+    <ProjectReference Include="..\Demo.ProductService\Demo.ProductService.csproj">
+      <ServiceLaunchUrl>http://{ContainerIpAddress}:{ContainerPort}/api/values</ServiceLaunchUrl>
+    </ProjectReference>
+    <ProjectReference Include="..\Demo.WorkerService\Demo.WorkerService.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>
