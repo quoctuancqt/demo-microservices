@@ -55,9 +55,9 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            var response = await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
+            //var response = await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
 
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
 
             return new OkObjectResult(entity);
         }

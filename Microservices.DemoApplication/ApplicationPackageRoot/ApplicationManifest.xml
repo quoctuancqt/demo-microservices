@@ -16,7 +16,6 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Demo.WorkerServicePkg" ServiceManifestVersion="1.0.0" />
     <Policies>
-      <RunAsPolicy CodePackageRef="Code" UserRef="NT AUTHORITY\SYSTEM" />
       <ContainerHostPolicies CodePackageRef="Code" Isolation="[Demo.WorkerService_Isolation]">
         <!--Port of container-->
       </ContainerHostPolicies>
@@ -25,7 +24,6 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Demo.NotificationServicePkg" ServiceManifestVersion="1.0.0" />
     <Policies>
-      <RunAsPolicy CodePackageRef="Code" UserRef="NT AUTHORITY\SYSTEM" />
       <ContainerHostPolicies CodePackageRef="Code" Isolation="[Demo.NotificationService_Isolation]">
         <PortBinding ContainerPort="5002" EndpointRef="Demo.NotificationServiceTypeEndpoint" />
       </ContainerHostPolicies>
@@ -34,7 +32,6 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Demo.ProductServicePkg" ServiceManifestVersion="1.0.0" />
     <Policies>
-      <RunAsPolicy CodePackageRef="Code" UserRef="NT AUTHORITY\SYSTEM" />
       <ContainerHostPolicies CodePackageRef="Code" Isolation="[Demo.ProductService_Isolation]">
         <PortBinding ContainerPort="5001" EndpointRef="Demo.ProductServiceTypeEndpoint" />
       </ContainerHostPolicies>
@@ -43,7 +40,6 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Demo.OAuthServerPkg" ServiceManifestVersion="1.0.0" />
     <Policies>
-      <RunAsPolicy CodePackageRef="Code" UserRef="NT AUTHORITY\SYSTEM" />
       <ContainerHostPolicies CodePackageRef="Code" Isolation="[Demo.OAuthServer_Isolation]">
         <PortBinding ContainerPort="5000" EndpointRef="Demo.OAuthServerTypeEndpoint" />
       </ContainerHostPolicies>
@@ -76,9 +72,4 @@
       </StatelessService>
     </Service>
   </DefaultServices>
-  <Principals>
-    <Users>
-      <User Name="NT AUTHORITY\SYSTEM" />
-    </Users>
-  </Principals>
 </ApplicationManifest>
