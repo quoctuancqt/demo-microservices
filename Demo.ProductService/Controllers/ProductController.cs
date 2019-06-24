@@ -6,7 +6,10 @@ using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
@@ -55,9 +58,23 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            //var response = await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:19081/Microservices.DemoApplication/Demo.NotificationService/api");
 
-            //response.EnsureSuccessStatusCode();
+                var token = HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var beareToken = token.Split("Bearer ")[1];
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
+                }
+
+                var response = await client.PostAsJsonAsync("/notification/notify", entity);
+
+                response.EnsureSuccessStatusCode();
+            }
 
             return new OkObjectResult(entity);
         }

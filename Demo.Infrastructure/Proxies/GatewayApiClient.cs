@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -61,6 +62,11 @@ namespace Demo.Infrastructure.Proxies
                     _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
                 }
             }
+        }
+
+        public void CustomEndpoint(string url)
+        {
+            _httpClient.BaseAddress = new Uri(url);
         }
     }
 }
