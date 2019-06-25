@@ -347,3 +347,7 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+/Demo.OAuthServer/appsettings.Development.json
+/Demo.NotificationService/appsettings.Development.json
+/Demo.ProductService/appsettings.Development.json
+/Demo.WorkerService/appsettings.Development.json

@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -48,7 +47,7 @@ namespace Demo.EventBus.Extensions
                     var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
 
-                    var factory = new ConnectionFactory();
+                    var factory = new ConnectionFactory() { DispatchConsumersAsync = true };
 
                     if (!string.IsNullOrEmpty(configuration["EventBus:Connection"]))
                     {
