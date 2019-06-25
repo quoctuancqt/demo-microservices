@@ -65,25 +65,6 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            //var client = new ServicePartitionClient<HttpCommunicationClient>(
-            //_clientFactory, new Uri("fabric:/Microservices.DemoApplication/Demo.NotificationService"));
-
-            //await client.InvokeWithRetryAsync(async x =>
-            //{
-            //    var token = HttpContext.Request.Headers["Authorization"].ToString();
-
-            //    if (!string.IsNullOrEmpty(token))
-            //    {
-            //        var beareToken = token.Split("Bearer ")[1];
-
-            //        x.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
-
-            //        var resp = await x.HttpClient.PostAsync("/api/notification/notify", ObjToHttpContent(entity));
-
-            //        resp.EnsureSuccessStatusCode();
-            //    }
-            //});
-
             using (var client = new HttpClient())
             {
                 var token = HttpContext.Request.Headers["Authorization"].ToString();
@@ -94,8 +75,7 @@ namespace Demo.ProductService.Controllers
 
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
 
-                    //http://192.168.2.99:5002/api/notification/notify
-                    var resp = await client.PostAsync("http://NEWTUANCAO-PC.successsoftware.local:19081/Microservices.DemoApplication/Demo.NotificationService/api/notification/notify", ObjToHttpContent(entity));
+                    var resp = await client.PostAsync("http://192.168.2.99:5002/api/notification/notify", ObjToHttpContent(entity));
 
                     resp.EnsureSuccessStatusCode();
                 }
@@ -110,6 +90,35 @@ namespace Demo.ProductService.Controllers
             _eventBus.Publish(new NotificationIntegrationEvent(dto.Name, dto.Description, dto.Price, dto.CategoryId));
 
             return Ok("Publish");
+        }
+
+        [HttpPost("push-to-service")]
+        public async Task<IActionResult> PushNotifyToService([FromBody] CreateProductDto dto)
+        {
+            var result = string.Empty;
+
+            var client = new ServicePartitionClient<HttpCommunicationClient>(
+                _clientFactory, new Uri("fabric:/Microservices.DemoApplication/Demo.NotificationService"));
+
+            await client.InvokeWithRetryAsync(async x =>
+            {
+                var token = HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var beareToken = token.Split("Bearer ")[1];
+
+                    x.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
+
+                    var resp = await x.HttpClient.PostAsync("/api/notification/notify", ObjToHttpContent(dto));
+
+                    resp.EnsureSuccessStatusCode();
+
+                    result = await resp.Content.ReadAsStringAsync();
+                }
+            });
+
+            return Ok(result);
         }
 
         private StringContent ObjToHttpContent(object obj)
