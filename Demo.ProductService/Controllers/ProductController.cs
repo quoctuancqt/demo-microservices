@@ -65,26 +65,10 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            var client = new ServicePartitionClient<HttpCommunicationClient>(
-            _clientFactory, new Uri("fabric:/Microservices.DemoApplication/Demo.NotificationService"));
+            //var client = new ServicePartitionClient<HttpCommunicationClient>(
+            //_clientFactory, new Uri("fabric:/Microservices.DemoApplication/Demo.NotificationService"));
 
-            await client.InvokeWithRetryAsync(async x =>
-            {
-                var token = HttpContext.Request.Headers["Authorization"].ToString();
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    var beareToken = token.Split("Bearer ")[1];
-
-                    x.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
-
-                    var resp = await x.HttpClient.PostAsync("/api/notification/notify", ObjToHttpContent(entity));
-
-                    resp.EnsureSuccessStatusCode();
-                }
-            });
-
-            //using (var client = new HttpClient())
+            //await client.InvokeWithRetryAsync(async x =>
             //{
             //    var token = HttpContext.Request.Headers["Authorization"].ToString();
 
@@ -92,13 +76,30 @@ namespace Demo.ProductService.Controllers
             //    {
             //        var beareToken = token.Split("Bearer ")[1];
 
-            //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
+            //        x.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
 
-            //        var resp = await client.PostAsync("http://192.168.2.99:5002/api/notification/notify", ObjToHttpContent(entity));
+            //        var resp = await x.HttpClient.PostAsync("/api/notification/notify", ObjToHttpContent(entity));
 
             //        resp.EnsureSuccessStatusCode();
             //    }
-            //}
+            //});
+
+            using (var client = new HttpClient())
+            {
+                var token = HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var beareToken = token.Split("Bearer ")[1];
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
+
+                    //http://192.168.2.99:5002/api/notification/notify
+                    var resp = await client.PostAsync("http://NEWTUANCAO-PC.successsoftware.local:19081/Microservices.DemoApplication/Demo.NotificationService/api/notification/notify", ObjToHttpContent(entity));
+
+                    resp.EnsureSuccessStatusCode();
+                }
+            }
 
             return new OkObjectResult(entity);
         }
