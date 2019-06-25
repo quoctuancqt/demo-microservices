@@ -27,13 +27,5 @@ namespace Demo.NotificationService.Controllers
 
             return Ok();
         }
-
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("")]
-        public IActionResult Get()
-        {
-            return Ok("Test");
-        }
     }
 }
