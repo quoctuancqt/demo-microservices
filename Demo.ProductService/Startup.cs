@@ -3,6 +3,7 @@ using Core.Middlewares;
 using Demo.EventBus.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.Proxies;
+using Demo.SFCommunication;
 using JwtTokenServer.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,8 @@ namespace Demo.ProductService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddServiceFabricHttpCommunication();
+
             services.AddDbContext<ProductContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ProductDB"));

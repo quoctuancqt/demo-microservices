@@ -10,12 +10,14 @@
     <PackageReference Include="JwtTokenServer" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.ServiceFabric.Services" Version="3.4.639" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Demo.EventBus\Demo.EventBus.csproj" />
     <ProjectReference Include="..\Demo.Infrastructure\Demo.Infrastructure.csproj" />
+    <ProjectReference Include="..\Demo.SFCommunication\Demo.SFCommunication.csproj" />
   </ItemGroup>
 
   <ItemGroup>
