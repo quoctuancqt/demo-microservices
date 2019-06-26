@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
-    <ProjectReference Include="..\Demo.HttpResilience\Demo.HttpResilience.csproj" />
   </ItemGroup>
 
 </Project>

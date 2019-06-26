@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Extensions;
+﻿using Core.Extensions;
 using Demo.Infrastructure.Extensions;
 using Demo.Infrastructure.MongoDb;
 using JwtTokenServer.Extensions;
@@ -32,11 +31,6 @@ namespace Demo.NotificationService
             services.AddSwashbuckle();
 
             services.JWTAddAuthentication(Configuration);
-
-            services.AddHttpClient("GatewayClient", config =>
-            {
-                config.BaseAddress = new Uri(Configuration.GetValue<string>("GatewayApi"));
-            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

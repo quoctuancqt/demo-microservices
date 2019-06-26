@@ -2,16 +2,14 @@
 using Core.Interfaces;
 using Core.Logging;
 using Core.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Resilience.Extensions;
 using System.Reflection;
 
 namespace Core.Extensions
 {
     public static class RegisterServices
     {
-        public static IServiceCollection AddServices(this IServiceCollection services, bool useResilientHttp = false)
+        public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSingleton(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
@@ -27,8 +25,6 @@ namespace Core.Extensions
             });
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-            services.RegisterResilienceHttp(useResilientHttp);
 
             return services;
         }
