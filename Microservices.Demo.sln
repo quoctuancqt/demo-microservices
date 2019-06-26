@@ -27,11 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.ProductService", "Demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.NotificationService", "Demo.NotificationService\Demo.NotificationService.csproj", "{2818083A-5398-4820-872A-D38B7A3ACB65}"
 EndProject
-Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "Microservices.DemoApplication", "Microservices.DemoApplication\Microservices.DemoApplication.sfproj", "{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.WorkerService", "Demo.WorkerService\Demo.WorkerService.csproj", "{20C77621-D49A-4B41-A6D1-73A5E0359A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.SFCommunication", "Demo.SFCommunication\Demo.SFCommunication.csproj", "{6677E4E3-4E11-4E45-9058-213BD38DE5A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.SFCommunication", "Demo.SFCommunication\Demo.SFCommunication.csproj", "{6677E4E3-4E11-4E45-9058-213BD38DE5A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,14 +103,6 @@ Global
 		{2818083A-5398-4820-872A-D38B7A3ACB65}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2818083A-5398-4820-872A-D38B7A3ACB65}.Release|x64.ActiveCfg = Release|Any CPU
 		{2818083A-5398-4820-872A-D38B7A3ACB65}.Release|x64.Build.0 = Release|Any CPU
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Debug|x64.ActiveCfg = Debug|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Debug|x64.Build.0 = Debug|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Debug|x64.Deploy.0 = Debug|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Release|Any CPU.ActiveCfg = Release|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Release|x64.ActiveCfg = Release|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Release|x64.Build.0 = Release|x64
-		{2CAE98FE-D87C-4A27-8D9F-926B2EE6C41B}.Release|x64.Deploy.0 = Release|x64
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31}.Debug|x64.ActiveCfg = Debug|Any CPU
