@@ -53,6 +53,8 @@
                 c.AddSecurityRequirement(security);
             });
 
+            services.AddCors();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -63,6 +65,12 @@
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder => builder
+             .AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader()
+             .AllowCredentials());
 
             app.UseSwagger();
 

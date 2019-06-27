@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Test Client Microservices</title>
+    <style type="text/css">
+        .block {
+            margin: 5px;
+            max-width: 400px;
+            word-wrap: break-word;
+        }
+
+        .block-item {
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body style="width:800px">
+    <div class="block">
+        <button id="btn-get-token">Get Token</button>
+    </div>
+    <div class="block">
+        <label id="lb-access-token"></label>
+    </div>
+
+    <div class="block">
+        <p>Call Get Product API via API Gateway</p>
+        <button id="btn-get-products">Get Products</button>
+    </div>
+    <div class="block">
+
+    </div>
+
+    <div class="block">
+        <p>Create Product and send result to Notification service to insert MongoDb</p>
+        <div class="block-item">
+            <label>Name: </label><input type="text" id="txt-name" />
+        </div>
+        <div class="block-item">
+            <label>Description: </label><input type="text" id="txt-description" />
+        </div>
+        <div class="block-item">
+            <label>Price: </label><input type="text" id="txt-price" />
+        </div>
+        <div class="block-item">
+            <label>Category: </label>
+            <select id="sl-category">
+                <option value="0de8b508-16a5-4683-be41-179da9f592d3">Grocery</option>
+                <option value="39e325fb-4b03-4dba-bdf7-8452117b903f">Clothes</option>
+                <option value="a159f213-3cdd-40a3-9fb3-240b89369155">Electronics</option>
+            </select>
+        </div>
+        <br />
+        <button id="btn-create-product">Create Product</button>
+    </div>
+    <div class="block">
+        <p>Push message to Message Queue</p>
+        <button id="btn-push-notify">Push Notify</button>
+    </div>
+
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script>
+        var gatewayAPIEndpoint = "http://localhost:9000";
+
+        $("#btn-get-token").click(function () {
+            $.ajax({
+                method: "POST",
+                url: "http://localhost:8000/api/account/login",
+                data: JSON.stringify({ username: "admin", password: "admin" }),
+                contentType: 'application/json',
+                success: function (resp) {
+                    $("#lb-access-token").html(resp.accessToken);
+                    localStorage.setItem('access_token', resp.accessToken);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+
+        $("#btn-get-products").click(function () {
+            $.ajax({
+                method: "GET",
+                url: gatewayAPIEndpoint + "/product",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
+                },
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+
+        $("#btn-create-product").click(function () {
+            $.ajax({
+                method: "POST",
+                url: gatewayAPIEndpoint + "/product",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
+                },
+                data: JSON.stringify({
+                    name: $("#txt-name").val(),
+                    description: $("#txt-description").val(),
+                    price: $("#txt-price").val(),
+                    categoryId: $("#sl-category").val()
+                }),
+                contentType: 'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+
+        $("#btn-push-notify").click(function () {
+            $.ajax({
+                method: "POST",
+                url: gatewayAPIEndpoint + "/product/push-notify",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
+                },
+                data: JSON.stringify({
+                    name: $("#txt-name").val(),
+                    description: $("#txt-description").val(),
+                    price: $("#txt-price").val(),
+                    categoryId: $("#sl-category").val()
+                }),
+                contentType: 'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        });
+    </script>
+</body>
+</html>
