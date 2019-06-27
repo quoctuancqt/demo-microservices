@@ -13,7 +13,7 @@ namespace OAuthServer
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5000")
+                .UseUrls("http://*:8000")
                 .UseEnvironment(EnvironmentHelper.Environment)
                 .UseStartup<Startup>();
     }

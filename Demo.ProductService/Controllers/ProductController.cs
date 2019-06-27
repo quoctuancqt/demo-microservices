@@ -6,10 +6,7 @@ using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Demo.ProductService.Controllers
@@ -58,7 +55,7 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
+            await _gatewayApiClient.PostAsJsonAsync("notification/notify", entity);
 
             return new OkObjectResult(entity);
         }
@@ -69,11 +66,6 @@ namespace Demo.ProductService.Controllers
             _eventBus.Publish(new NotificationIntegrationEvent(dto.Name, dto.Description, dto.Price, dto.CategoryId));
 
             return Ok("Publish");
-        }
-
-        private StringContent ObjToHttpContent(object obj)
-        {
-            return new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
         }
     }
 }

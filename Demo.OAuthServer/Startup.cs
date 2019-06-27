@@ -31,7 +31,7 @@
 
             services.AddAccountManager<AccountManager>();
 
-            services.AddHttpClient<OAuthClient>(typeof(OAuthClient).Name, client => client.BaseAddress = new Uri("http://localhost:5000"));
+            services.AddHttpClient<OAuthClient>(typeof(OAuthClient).Name, client => client.BaseAddress = new Uri(Configuration.GetSection("JWTSettings").GetValue<string>("Issuer")));
 
             services.AddSwaggerGen(c =>
             {
