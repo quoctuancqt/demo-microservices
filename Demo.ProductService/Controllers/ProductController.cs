@@ -4,12 +4,9 @@ using Demo.Infrastructure.Proxies;
 using Demo.ProductService.DTO;
 using Demo.ProductService.IntegrationEvents.Events;
 using Demo.ProductService.Models;
-using Demo.SFCommunication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.ServiceFabric.Services.Communication.Client;
 using Newtonsoft.Json;
-using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -26,17 +23,14 @@ namespace Demo.ProductService.Controllers
         private readonly IRepository<Product, ProductContext> _repository;
         private readonly GatewayApiClient _gatewayApiClient;
         private readonly IEventBus _eventBus;
-        private readonly IHttpCommunicationClientFactory _clientFactory;
 
         public ProductController(IRepository<Product, ProductContext> repository,
             GatewayApiClient gatewayApiClient
             , IEventBus eventBus
-            , IHttpCommunicationClientFactory clientFactory
             )
         {
             _repository = repository;
             _eventBus = eventBus;
-            _clientFactory = clientFactory;
             _gatewayApiClient = gatewayApiClient;
             _gatewayApiClient.SetToken();
         }
@@ -90,35 +84,6 @@ namespace Demo.ProductService.Controllers
             _eventBus.Publish(new NotificationIntegrationEvent(dto.Name, dto.Description, dto.Price, dto.CategoryId));
 
             return Ok("Publish");
-        }
-
-        [HttpPost("push-to-service")]
-        public async Task<IActionResult> PushNotifyToService([FromBody] CreateProductDto dto)
-        {
-            var result = string.Empty;
-
-            var client = new ServicePartitionClient<HttpCommunicationClient>(
-                _clientFactory, new Uri("fabric:/Microservices.DemoApplication/Demo.NotificationService"));
-
-            await client.InvokeWithRetryAsync(async x =>
-            {
-                var token = HttpContext.Request.Headers["Authorization"].ToString();
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    var beareToken = token.Split("Bearer ")[1];
-
-                    x.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
-
-                    var resp = await x.HttpClient.PostAsync("/api/notification/notify", ObjToHttpContent(dto));
-
-                    resp.EnsureSuccessStatusCode();
-
-                    result = await resp.Content.ReadAsStringAsync();
-                }
-            });
-
-            return Ok(result);
         }
 
         private StringContent ObjToHttpContent(object obj)

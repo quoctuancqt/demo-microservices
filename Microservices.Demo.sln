@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.NotificationService", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.WorkerService", "Demo.WorkerService\Demo.WorkerService.csproj", "{20C77621-D49A-4B41-A6D1-73A5E0359A31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.SFCommunication", "Demo.SFCommunication\Demo.SFCommunication.csproj", "{6677E4E3-4E11-4E45-9058-213BD38DE5A9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,14 +109,6 @@ Global
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31}.Release|Any CPU.Build.0 = Release|Any CPU
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31}.Release|x64.ActiveCfg = Release|Any CPU
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31}.Release|x64.Build.0 = Release|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Debug|x64.Build.0 = Debug|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Release|x64.ActiveCfg = Release|Any CPU
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,7 +123,6 @@ Global
 		{66372726-0EBE-47A9-8D0B-301B9EFB459F} = {D9CCC2A2-60A4-43BD-B40C-E30CED2DA42C}
 		{2818083A-5398-4820-872A-D38B7A3ACB65} = {D9CCC2A2-60A4-43BD-B40C-E30CED2DA42C}
 		{20C77621-D49A-4B41-A6D1-73A5E0359A31} = {D9CCC2A2-60A4-43BD-B40C-E30CED2DA42C}
-		{6677E4E3-4E11-4E45-9058-213BD38DE5A9} = {C961C10C-4B92-413A-8937-1B88CBC04511}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FCC9EBB3-1F22-4FFF-BF21-BF464CDF6C40}
