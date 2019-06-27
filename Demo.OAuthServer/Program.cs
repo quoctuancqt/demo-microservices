@@ -1,8 +1,6 @@
 ﻿using Common.Helpers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System;
-using System.IO;
 
 namespace OAuthServer
 {

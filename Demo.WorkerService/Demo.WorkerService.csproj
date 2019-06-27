@@ -12,6 +12,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Demo.Common\Demo.Common.csproj" />
     <ProjectReference Include="..\Demo.EventBus\Demo.EventBus.csproj" />
-    <ProjectReference Include="..\Demo.Infrastructure\Demo.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

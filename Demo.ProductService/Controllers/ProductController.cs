@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,21 +58,7 @@ namespace Demo.ProductService.Controllers
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            using (var client = new HttpClient())
-            {
-                var token = HttpContext.Request.Headers["Authorization"].ToString();
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    var beareToken = token.Split("Bearer ")[1];
-
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
-
-                    var resp = await client.PostAsync("http://localhost:5002/api/notification/notify", ObjToHttpContent(entity));
-
-                    resp.EnsureSuccessStatusCode();
-                }
-            }
+            await _gatewayApiClient.PostAsJsonAsync("/notification/notify", entity);
 
             return new OkObjectResult(entity);
         }

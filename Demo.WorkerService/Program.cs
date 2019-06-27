@@ -1,7 +1,6 @@
 using Common.Helpers;
 using Demo.EventBus.Abstractions;
 using Demo.EventBus.Extensions;
-using Demo.Infrastructure.MongoDb;
 using Demo.WorkerService.IntegrationEvents.EventHandling;
 using Demo.WorkerService.IntegrationEvents.Events;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +22,6 @@ namespace Demo.WorkerService
                 .ConfigureServices((hostContext, services) =>
                 {
                     var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-
-                    services.AddScoped(sp => new MongoFactory(configuration));
 
                     services.AddEventBus(configuration);
 
