@@ -69,7 +69,7 @@ namespace Demo.ProductService.Controllers
 
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", beareToken);
 
-                    var resp = await client.PostAsync("http://192.168.2.99:5002/api/notification/notify", ObjToHttpContent(entity));
+                    var resp = await client.PostAsync("http://localhost:5002/api/notification/notify", ObjToHttpContent(entity));
 
                     resp.EnsureSuccessStatusCode();
                 }
