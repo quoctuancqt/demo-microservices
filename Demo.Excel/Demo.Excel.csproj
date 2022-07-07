@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.6" />
   </ItemGroup>
 
   <ItemGroup>
